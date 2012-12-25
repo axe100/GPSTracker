@@ -55,7 +55,6 @@ public class Tracks extends Activity {
     String lat;
     String lng;
     String stamp;
-    
     JSONObject obj;
 
     @Override
@@ -93,7 +92,7 @@ public class Tracks extends Activity {
 
                 detail.putExtra("myid", posit);
 
-                //detail.putExtra("position", posit);
+                
                 startActivity(detail);
 
             }
@@ -102,143 +101,156 @@ public class Tracks extends Activity {
 
         if (this.isOnline() == true) {
 
-            
-        String[] result_columns = new String[]{
-            TrackDBOpenHelper.ID,
-            TrackDBOpenHelper.NAME,
-            TrackDBOpenHelper.USER_ID,
-            TrackDBOpenHelper.DATE,
-            TrackDBOpenHelper.START,
-            TrackDBOpenHelper.END,
-            TrackDBOpenHelper.SYNCED};
 
-        String[] item_result_columns = new String[]{
-            TrackDBOpenHelper.LAT,
-            TrackDBOpenHelper.LONG,
-            TrackDBOpenHelper.TIMESTAMP};
+            String[] result_columns = new String[]{
+                TrackDBOpenHelper.ID,
+                TrackDBOpenHelper.NAME,
+                TrackDBOpenHelper.USER_ID,
+                TrackDBOpenHelper.DATE,
+                TrackDBOpenHelper.START,
+                TrackDBOpenHelper.END,
+                TrackDBOpenHelper.SYNCED};
 
-        db = mySQLiteAdapter.getWritableDatabase();
+            String[] item_result_columns = new String[]{
+                TrackDBOpenHelper.LAT,
+                TrackDBOpenHelper.LONG,
+                TrackDBOpenHelper.TIMESTAMP};
 
-        String where = TrackDBOpenHelper.SYNCED + "=?";
-        String itemwhere = TrackDBOpenHelper.ID_TRACK + "=?";
-        String updatewhere = TrackDBOpenHelper.ID + "=?";
+            db = mySQLiteAdapter.getWritableDatabase();
 
-        sync_array = new String[]{"0"};
+            String where = TrackDBOpenHelper.SYNCED + "=?";
+            String itemwhere = TrackDBOpenHelper.ID_TRACK + "=?";
+            String updatewhere = TrackDBOpenHelper.ID + "=?";
 
-        Cursor c = db.query(TrackDBOpenHelper.DATABASE_TABLE_TRACKS,
-                result_columns, where,
-                sync_array, null, null, null);
+            sync_array = new String[]{"0"};
 
-        c.moveToFirst();
+            Cursor c = db.query(TrackDBOpenHelper.DATABASE_TABLE_TRACKS,
+                    result_columns, where,
+                    sync_array, null, null, null);
 
-        for (int i = 0; i < c.getCount(); i++) {
-            
-            Toast toast = Toast.makeText(Tracks.this, "Syncronize Tracks", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 50, 50);
-            toast.show();
+            c.moveToFirst();
 
-          obj = new JSONObject();
+            for (int i = 0; i < c.getCount(); i++) {
 
+                Toast toast = Toast.makeText(Tracks.this, "Syncronize Tracks", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 50, 50);
+                toast.show();
 
-            id = c.getString(c.getColumnIndex(TrackDBOpenHelper.ID));
-            trackName = c.getString(c.getColumnIndex(TrackDBOpenHelper.NAME));
-            userid = c.getString(c.getColumnIndex(TrackDBOpenHelper.USER_ID));
-            trackDate = c.getString(c.getColumnIndex(TrackDBOpenHelper.DATE));
-            trackStart = c.getString(c.getColumnIndex(TrackDBOpenHelper.START));
-            trackEnd = c.getString(c.getColumnIndex(TrackDBOpenHelper.END));
-
-            try {
-
-                obj.put("id", id);
-                obj.put("name", trackName);
-                obj.put("userid", userid);
-                obj.put("date", trackDate);
-                obj.put("starttime", trackStart);
-                obj.put("endtime", trackEnd);
-
-            } catch (JSONException ex) {
-                Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                obj = new JSONObject();
 
 
-            String[] id_track_array = {id};
-
-            Cursor item_c2 = db.query(TrackDBOpenHelper.DATABASE_TABLE_ITEMS,
-                    item_result_columns, itemwhere,
-                    id_track_array, null, null, null);
-
-            item_c2.moveToFirst();
-
-            for (int j = 0; j < item_c2.getCount(); j++) {
-
-                StringBuilder sb = new StringBuilder();
-                sb.append(j);
-
-                String item_id = sb.toString();
-
-                lat = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.LAT));
-                lng = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.LONG));
-                stamp = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.TIMESTAMP));
-
-                JSONArray item = new JSONArray();
-                item.put(lat);
-                item.put(lng);
-                item.put(stamp);
+                id = c.getString(c.getColumnIndex(TrackDBOpenHelper.ID));
+                trackName = c.getString(c.getColumnIndex(TrackDBOpenHelper.NAME));
+                userid = c.getString(c.getColumnIndex(TrackDBOpenHelper.USER_ID));
+                trackDate = c.getString(c.getColumnIndex(TrackDBOpenHelper.DATE));
+                trackStart = c.getString(c.getColumnIndex(TrackDBOpenHelper.START));
+                trackEnd = c.getString(c.getColumnIndex(TrackDBOpenHelper.END));
 
                 try {
-                    obj.put(item_id, item);
 
-                    item_c2.moveToNext();
+                    obj.put("id", id);
+                    obj.put("name", trackName);
+                    obj.put("userid", userid);
+                    obj.put("date", trackDate);
+                    obj.put("starttime", trackStart);
+                    obj.put("endtime", trackEnd);
 
                 } catch (JSONException ex) {
                     Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
-
                 }
+
+
+                String[] id_track_array = {id};
+
+                Cursor item_c2 = db.query(TrackDBOpenHelper.DATABASE_TABLE_ITEMS,
+                        item_result_columns, itemwhere,
+                        id_track_array, null, null, null);
+
+                item_c2.moveToFirst();
+
+                for (int j = 0; j < item_c2.getCount(); j++) {
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(j);
+
+                    String item_id = sb.toString();
+
+                    lat = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.LAT));
+                    lng = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.LONG));
+                    stamp = item_c2.getString(item_c2.getColumnIndex(TrackDBOpenHelper.TIMESTAMP));
+
+                    JSONArray item = new JSONArray();
+                    item.put(lat);
+                    item.put(lng);
+                    item.put(stamp);
+
+                    try {
+                        obj.put(item_id, item);
+
+                        item_c2.moveToNext();
+
+                    } catch (JSONException ex) {
+                        Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }
+                }
+                ContentValues newValues = new ContentValues();
+
+                //Die Spalte synced soll verschiedene Zustände darstellen
+                //0 noch nicht syncronisiert
+                //1 syncronisiert
+                //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
+                newValues.put(TrackDBOpenHelper.SYNCED, "2");
+
+                //AB JETZT SOLL DIE ANIMATION GESTARTET WERDEN, DAFÜR MUSS AB JETZT BIS SIEHE UNTEN DIE METHODE
+                //BINDVIEW IN CUSTOM ADAPTER AUFGERUFEN WERDEN
+
+                db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues, updatewhere, id_track_array);
+
+
+
+                c.moveToNext();
+
+                Toast toast2 = Toast.makeText(Tracks.this, obj.toString(), Toast.LENGTH_LONG);
+                toast2.setGravity(Gravity.TOP | Gravity.LEFT, 50, 50);
+                toast2.show();
+
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost("http://www.customsites.de/post.php");
+
+                try {
+                    // Add your data
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("JsonString", obj.toString()));
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    // Execute HTTP Post Request
+                    HttpResponse response = httpclient.execute(httppost);
+
+                } catch (ClientProtocolException e) {
+                    // TODO Auto-generated catch block
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+
+                ContentValues newValues2 = new ContentValues();
+
+                //Die Spalte synced soll verschiedene Zustände darstellen
+                //0 noch nicht syncronisiert
+                //1 syncronisiert
+                //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
+                newValues.put(TrackDBOpenHelper.SYNCED, "1");
+                
+                //WERT WIRD AUF 1 GEÄNDERT DAMIT ER BEIM NÄCHSTEN LADEN DER LISTE NICHT IN DIE ABFRAGE FÄLLT
+
+                db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues2, updatewhere, id_track_array);
             }
-            ContentValues newValues = new ContentValues();
 
-            newValues.put(TrackDBOpenHelper.SYNCED, "2");
-
-            db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues, updatewhere, id_track_array);
-
-
-
-            c.moveToNext();
-
-            Toast toast2 = Toast.makeText(Tracks.this, obj.toString(), Toast.LENGTH_LONG);
-            toast2.setGravity(Gravity.TOP | Gravity.LEFT, 50, 50);
-            toast2.show();
-
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://www.customsites.de/post.php");
-
-            try {
-                // Add your data
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("JsonString", obj.toString()));
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httppost);
-
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-            }
-            
-            ContentValues newValues2 = new ContentValues();
-
-            newValues.put(TrackDBOpenHelper.SYNCED, "1");
-
-            db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues2, updatewhere, id_track_array);
-        }
-        
-        Toast toast1 = Toast.makeText(Tracks.this, "All tracks already syncronized", Toast.LENGTH_LONG);
+            Toast toast1 = Toast.makeText(Tracks.this, "All tracks already syncronized", Toast.LENGTH_LONG);
             toast1.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
             toast1.show();
-        
+
         }
 
 

@@ -52,6 +52,10 @@ public class CustomAdapter extends SimpleCursorAdapter {
       
      String name = c.getString(c.getColumnIndex(TrackDBOpenHelper.NAME));
      String date = c.getString(c.getColumnIndex(TrackDBOpenHelper.DATE));
+     //Die Spalte synced soll verschiedene Zustände darstellen
+     //0 noch nicht syncronisiert
+     //1 syncronisiert
+     //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
      String synced = c.getString(c.getColumnIndex(TrackDBOpenHelper.SYNCED));
      
      TextView nameView = (TextView) v.findViewById(R.id.text);
