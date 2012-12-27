@@ -1,16 +1,16 @@
-# view AndroidManifest.xml #generated:18
+# view AndroidManifest.xml #generated:19
 -keep class android.pack.Account { <init>(...); }
 
 # view AndroidManifest.xml #generated:11
 -keep class android.pack.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:19
+# view AndroidManifest.xml #generated:21
 -keep class android.pack.NewTrack { <init>(...); }
 
-# view AndroidManifest.xml #generated:21
+# view AndroidManifest.xml #generated:24
 -keep class android.pack.TrackDetail { <init>(...); }
 
-# view AndroidManifest.xml #generated:20
+# view AndroidManifest.xml #generated:23
 -keep class android.pack.Tracks { <init>(...); }
 
 # view res/layout/trackdetail.xml #generated:119

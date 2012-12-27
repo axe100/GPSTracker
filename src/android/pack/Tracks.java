@@ -92,7 +92,7 @@ public class Tracks extends Activity {
 
                 detail.putExtra("myid", posit);
 
-                
+
                 startActivity(detail);
 
             }
@@ -168,6 +168,8 @@ public class Tracks extends Activity {
 
                 item_c2.moveToFirst();
 
+                JSONArray points = new JSONArray();
+
                 for (int j = 0; j < item_c2.getCount(); j++) {
 
                     StringBuilder sb = new StringBuilder();
@@ -184,87 +186,94 @@ public class Tracks extends Activity {
                     item.put(lng);
                     item.put(stamp);
 
-                    try {
-                        obj.put(item_id, item);
+                    points.put(item);
 
-                        item_c2.moveToNext();
+                    item_c2.moveToNext();
 
-                    } catch (JSONException ex) {
-                        Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
 
-                    }
+
                 }
-                ContentValues newValues = new ContentValues();
-
-                //Die Spalte synced soll verschiedene Zustände darstellen
-                //0 noch nicht syncronisiert
-                //1 syncronisiert
-                //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
-                newValues.put(TrackDBOpenHelper.SYNCED, "2");
-
-                //AB JETZT SOLL DIE ANIMATION GESTARTET WERDEN, DAFÜR MUSS AB JETZT BIS SIEHE UNTEN DIE METHODE
-                //BINDVIEW IN CUSTOM ADAPTER AUFGERUFEN WERDEN
-
-                db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues, updatewhere, id_track_array);
-
-
-
-                c.moveToNext();
-
-                Toast toast2 = Toast.makeText(Tracks.this, obj.toString(), Toast.LENGTH_LONG);
-                toast2.setGravity(Gravity.TOP | Gravity.LEFT, 50, 50);
-                toast2.show();
-
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost("http://www.customsites.de/post.php");
-
                 try {
-                    // Add your data
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                    nameValuePairs.add(new BasicNameValuePair("JsonString", obj.toString()));
-                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                    // Execute HTTP Post Request
-                    HttpResponse response = httpclient.execute(httppost);
-
-                } catch (ClientProtocolException e) {
-                    // TODO Auto-generated catch block
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
+                    obj.put("Points", points);
+                } catch (JSONException ex) {
+                    Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                ContentValues newValues2 = new ContentValues();
 
-                //Die Spalte synced soll verschiedene Zustände darstellen
-                //0 noch nicht syncronisiert
-                //1 syncronisiert
-                //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
-                newValues.put(TrackDBOpenHelper.SYNCED, "1");
-                
-                //WERT WIRD AUF 1 GEÄNDERT DAMIT ER BEIM NÄCHSTEN LADEN DER LISTE NICHT IN DIE ABFRAGE FÄLLT
 
-                db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues2, updatewhere, id_track_array);
+            
+            
+            ContentValues newValues = new ContentValues();
+            //Die Spalte synced soll verschiedene Zustände darstellen
+            //0 noch nicht syncronisiert
+            //1 syncronisiert
+            //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
+            //newValues.put(TrackDBOpenHelper.SYNCED, "2");
+
+            //AB JETZT SOLL DIE ANIMATION GESTARTET WERDEN, DAFÜR MUSS AB JETZT BIS SIEHE UNTEN DIE METHODE
+            //BINDVIEW IN CUSTOM ADAPTER AUFGERUFEN WERDEN
+
+            //db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues, updatewhere, id_track_array);
+
+
+
+            c.moveToNext();
+
+            Toast toast2 = Toast.makeText(Tracks.this, obj.toString(), Toast.LENGTH_LONG);
+            toast2.setGravity(Gravity.TOP | Gravity.LEFT, 50, 50);
+            toast2.show();
+
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://www.customsites.de/post.php");
+
+            try {
+                // Add your data
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("JsonString", obj.toString()));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
             }
 
-            Toast toast1 = Toast.makeText(Tracks.this, "All tracks already syncronized", Toast.LENGTH_LONG);
-            toast1.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-            toast1.show();
+            ContentValues newValues2 = new ContentValues();
 
+            //Die Spalte synced soll verschiedene Zustände darstellen
+            //0 noch nicht syncronisiert
+            //1 syncronisiert
+            //2 am syncen (währenddessen soll die animation und loadimage gezeigt werden)
+            newValues2.put(TrackDBOpenHelper.SYNCED, "1");
+
+            //WERT WIRD AUF 1 GEÄNDERT DAMIT ER BEIM NÄCHSTEN LADEN DER LISTE NICHT IN DIE ABFRAGE FÄLLT
+
+            db.update(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, newValues2, updatewhere, id_track_array);
         }
 
+        Toast toast1 = Toast.makeText(Tracks.this, "All tracks already syncronized", Toast.LENGTH_LONG);
+        toast1.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+        toast1.show();
 
-        if (!(this.isOnline() == true)) {
+    }
+    
+
+
+    if (!(this.isOnline() 
+        == true)) {
 
             Toast toast = Toast.makeText(Tracks.this, "For syncronising your track, please activate Internet Access", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 50, 50);
-            toast.show();
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 50, 50);
+        toast.show();
 
-        }
     }
-
-    @Override
-    public void onRestart() {
+}
+@Override
+        public void onRestart() {
 
         super.onRestart();
         listContent.invalidate();

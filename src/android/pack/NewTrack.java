@@ -129,6 +129,7 @@ public class NewTrack extends Activity {
 
         alert.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+            
             }
         });
 
@@ -265,9 +266,8 @@ public class NewTrack extends Activity {
 
                     starttime = (today.format("%k:%M:%S"));
 
-                }
+               }
             }
         });
-
     }
 }

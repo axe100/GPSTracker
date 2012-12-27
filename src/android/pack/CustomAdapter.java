@@ -48,7 +48,7 @@ public class CustomAdapter extends SimpleCursorAdapter {
 
   private View constructViewContent(Context context,Cursor c, View v) {
      
-     Animation rotate_l = AnimationUtils.loadAnimation( context,R.anim.rotate_center_1);
+     
       
      String name = c.getString(c.getColumnIndex(TrackDBOpenHelper.NAME));
      String date = c.getString(c.getColumnIndex(TrackDBOpenHelper.DATE));
@@ -65,7 +65,10 @@ public class CustomAdapter extends SimpleCursorAdapter {
      nameView.setText(name);
      dateView.setText(date);
      
+     //loadImage.startAnimation(rotate_l);   
+     
      if((synced.equals("2"))){
+        Animation rotate_l = AnimationUtils.loadAnimation( context,R.anim.rotate_center_1);
         loadImage.startAnimation(rotate_l);   
      }
      
