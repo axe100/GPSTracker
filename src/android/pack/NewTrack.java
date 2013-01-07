@@ -277,7 +277,7 @@ public class NewTrack extends Activity {
                 } else {
 
                     lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 4, listener);
+                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 2, listener);
 
                     frameanim.start();
                     tracking.setText("Stop Tracking");

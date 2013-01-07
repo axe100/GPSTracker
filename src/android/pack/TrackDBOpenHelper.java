@@ -15,7 +15,7 @@ public class TrackDBOpenHelper extends SQLiteOpenHelper {
 
     private final String LOG_LABEL = getClass().getSimpleName();
     public static final String DATABASE_NAME = "app.db";
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_TABLE_TRACKS = "tracks";
     public static final String ID = "_id";
     public static final String NAME = "name";
