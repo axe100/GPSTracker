@@ -67,12 +67,13 @@ public class CustomAdapter extends SimpleCursorAdapter {
      
      //loadImage.startAnimation(rotate_l);   
      
-     if((synced.equals("2"))){
+     if((synced.equals("0"))){
         Animation rotate_l = AnimationUtils.loadAnimation( context,R.anim.rotate_center_1);
-        loadImage.startAnimation(rotate_l);   
+        loadImage.startAnimation(rotate_l);
+        loadImage.setVisibility(View.INVISIBLE);
      }
      
-     loadImage.setVisibility(View.INVISIBLE);
+     //loadImage.setVisibility(View.INVISIBLE);
        
     return v;  
 

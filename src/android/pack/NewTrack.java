@@ -31,9 +31,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  *
@@ -66,7 +68,8 @@ public class NewTrack extends Activity {
     private String groupBy = null;
     private String having = null;
     private String order = null;
-    AlertDialog.Builder alert;
+    AlertDialog.Builder alertb;
+    AlertDialog alert;
     EditText input;
     String nameOfTrack;
     public int tableid = 0;
@@ -77,8 +80,8 @@ public class NewTrack extends Activity {
     List<Double> longs;
     List<Long> timestamps;
     String[] id_array;
+    long init, now, time;
     private LocationListener listener = new LocationListener() {
-        
         public void onStatusChanged(String provider, int status, Bundle extras) {
             //Log.i(LOG_LABEL, provider + " status changed");
         }
@@ -119,21 +122,24 @@ public class NewTrack extends Activity {
         longs = new ArrayList<Double>();
         timestamps = new ArrayList<Long>();
 
-        alert = new AlertDialog.Builder(this);
+        alertb = new AlertDialog.Builder(NewTrack.this);
         input = new EditText(this);
 
-        alert.setTitle("New Track");
-        alert.setMessage("Tab in New Track Name");
+        alertb.setTitle("New Track");
+        alertb.setMessage("Tab in New Track Name");
 
-        alert.setView(input);
+        alertb.setView(input);
 
-        alert.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+        alertb.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-            
+                
+                dialog.cancel();
+                alert.dismiss();
+                
             }
         });
 
-        alert.setNegativeButton("Save Track", new DialogInterface.OnClickListener() {
+        alertb.setNegativeButton("Save Track", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 nameOfTrack = input.getText().toString();
@@ -146,13 +152,13 @@ public class NewTrack extends Activity {
                 year = today.year;
                 month = today.month;
                 day = today.monthDay;
-                
+
                 StringBuilder my_sp = new StringBuilder();
-                
-                my_sp.append(day).append(".").append(month).append(".").append(year);
-                
+
+                my_sp.append(day).append(".").append(month+1).append(".").append(year);
+
                 String my_date = my_sp.toString();
-                
+
                 stoptime = (today.format("%k:%M"));
 
                 ContentValues newValues = new ContentValues();
@@ -161,7 +167,7 @@ public class NewTrack extends Activity {
                 newValues.put(TrackDBOpenHelper.START, starttime);
                 newValues.put(TrackDBOpenHelper.END, stoptime);
                 newValues.put(TrackDBOpenHelper.DATE, my_date);
-                
+
 
                 db.insert(TrackDBOpenHelper.DATABASE_TABLE_TRACKS, null, newValues);
 
@@ -208,8 +214,16 @@ public class NewTrack extends Activity {
                 lats.clear();
                 longs.clear();
                 timestamps.clear();
+                
+                dialog.cancel();
+                
+                alert.dismiss();
             }
+
+           
         });
+        
+        alert = alertb.create();
 
         mySQLiteAdapter = new TrackDBOpenHelper(this.getBaseContext(),
                 TrackDBOpenHelper.DATABASE_NAME, null,
@@ -227,8 +241,16 @@ public class NewTrack extends Activity {
         mChronometer.setText("00:00:00");
         mChronometer.setOnChronometerTickListener(new OnChronometerTickListener() {
             public void onChronometerTick(Chronometer cArg) {
-                long t = SystemClock.elapsedRealtime() - cArg.getBase();
-                cArg.setText(DateFormat.format("kk:mm:ss", t));
+
+               formatChronometerText(mChronometer);
+                //cArg.setText(DateFormat.format("kk:mm:ss", "S"));
+
+                /*SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+                 timeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                 now = System.currentTimeMillis();
+                 time = now - init;
+                 String s2 = timeFormat.format(time);
+                 cArg.setText(s2);*/
             }
         });
 
@@ -247,7 +269,7 @@ public class NewTrack extends Activity {
                 if (frameanim.isRunning()) {
                     frameanim.stop();
                     mChronometer.stop();
-                    mChronometer.setBase(SystemClock.elapsedRealtime());
+                    //mChronometer.setBase(SystemClock.elapsedRealtime());
                     mChronometer.setText("00:00:00");
                     alert.show();
 
@@ -260,14 +282,33 @@ public class NewTrack extends Activity {
                     frameanim.start();
                     tracking.setText("Stop Tracking");
                     mChronometer.setBase(SystemClock.elapsedRealtime());
+                    //init = System.currentTimeMillis();
+                    //mChronometer.setBase(init);
+                    formatChronometerText(mChronometer);
                     mChronometer.start();
                     today = new Time(Time.getCurrentTimezone());
                     today.setToNow();
 
                     starttime = (today.format("%k:%M:%S"));
+                    
+                    
 
-               }
+                }
             }
+            
+            
+            
         });
     }
-}
+       public void formatChronometerText(Chronometer c) {
+    int cTextSize = c.getText().length();
+    if (cTextSize == 5) {
+        mChronometer.setFormat("00:%s");
+    } else if (cTextSize == 7) {
+        mChronometer.setFormat("0%s");
+    }
+    
+    
+       }
+    }
+

@@ -242,7 +242,7 @@ public class TrackDetail extends MapActivity {
         
         knots = (in/1.852);
 
-        speedview.setText(f2.format(in)+" km/h "+f2.format(knots)+" knots");
+        speedview.setText(f2.format(in)+" km/h"+"\n"+f2.format(knots)+" Knots");
 
     }
 

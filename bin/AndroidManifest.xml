@@ -21,7 +21,7 @@ android:screenOrientation="portrait"/>
         <activity android:name="NewTrack" 
 android:screenOrientation="portrait"/> 
         <activity android:name="Tracks" android:screenOrientation="portrait"/> 
-        <activity android:name="TrackDetail" android:screenOrientation="portrait"/> 
+        <activity android:name="TrackDetail" android:screenOrientation="portrait" /> 
 <uses-library android:name="com.google.android.maps" android:required="true" />
     </application>
 </manifest>
